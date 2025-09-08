@@ -1,0 +1,10 @@
+API
+
+BHUVAN API - https://bhuvan-app1.nrsc.gov.in/api/
+
+RAPID API - https://rapidapi.com/qode-data-qode-data-default/api/crop-recommendation-api/playground/apiendpoint_098a948b-9d75-4d21-804d-634d59c15484
+
+AGRIO API - https://agrio.app/Agriculture-API/
+
+
+MAPMYCROP API - https://mapmycrop.com/
