@@ -6,5 +6,8 @@ RAPID API - https://rapidapi.com/qode-data-qode-data-default/api/crop-recommenda
 
 AGRIO API - https://agrio.app/Agriculture-API/
 
-
 MAPMYCROP API - https://mapmycrop.com/
+
+LANGUAGE API - GOOGLE MLKITTRANSLATE
+
+
