@@ -3,10 +3,701 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <link rel="stylesheet" href="styles.css">   
-     <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"/>
-    
+    <title>CropVerse - AI-based crop recommendation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        body.light {
+            background-color: #f0fdf4;
+            color: #1f2937;
+        }
+        body.dark {
+            background-color: #1f2937;
+            color: #e5e7eb;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .page-content {
+            display: none;
+        }
+        .page-content.active {
+            display: block;
+        }
+        .header {
+            background-color: white;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 1rem;
+            z-index: 50;
+            transition: background-color 0.3s ease;
+        }
+        body.light .header {
+            background-color: #1f2937;
+            color: #e5e7eb;
+        }
+        body.dark .header {
+            background-color: white;
+            color: #1f2937;
+        }
+        .nav-link.active {
+            border-bottom: 2px solid #16a34a;
+            font-weight: 600;
+        }
+        .phone-container {
+            position: relative;
+            background: #222;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .phone-screen {
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+            transition: background-color 0.3s ease;
+        }
+        body.light .phone-screen {
+            background-color: #27272a;
+        }
+        body.dark .phone-screen {
+            background-color: #f0fdf4;
+        }
+        .ai-assistant-page {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease;
+        }
+        body.light .ai-assistant-page {
+             background-color: #27272a;
+             color: #e5e7eb;
+        }
+        body.dark .ai-assistant-page {
+            background-color: #f0fdf4;
+            color: #1f2937;
+        }
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        body.light .chat-header {
+            background-color: #1a1a1c;
+            color: #d4d4d4;
+        }
+        body.dark .chat-header {
+            background-color: #f0fdf4;
+            color: #1f2937;
+        }
+        .chat-bubble-user {
+            background-color: #16a34a;
+            color: white;
+            border-radius: 1.5rem 1.5rem 0 1.5rem;
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+        }
+        .chat-bubble-ai {
+            background-color: #3f3f46;
+            color: white;
+            border-radius: 1.5rem 1.5rem 1.5rem 0;
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+        }
+        body.dark .chat-bubble-ai {
+            background-color: #cbd5e1;
+            color: #1f2937;
+        }
+        body.light .chat-input-container {
+            background-color: #1a1a1c;
+            color: #e5e7eb;
+        }
+        body.dark .chat-input-container {
+             background-color: white;
+             color: #1f2937;
+        }
+        .chat-input-container {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        body.light #chat-input {
+            background-color: #374151;
+            color: #e5e7eb;
+        }
+        body.dark #chat-input {
+            background-color: #cbd5e1;
+            color: #1f2937;
+        }
+        .config-menu {
+            position: absolute;
+            top: 55px;
+            right: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 60;
+            width: 250px;
+            padding: 1rem;
+            display: none;
+        }
+        body.light .config-menu {
+             background-color: #2d3748;
+             color: #e5e7eb;
+        }
+        body.dark .config-menu {
+            background-color: white;
+            color: #1f2937;
+        }
+        .config-menu.active {
+            display: block;
+        }
+        .flag-button {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        input[type="text"] {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
+        }
+        body.dark input[type="text"] {
+            background-color: #374151;
+            color: #e5e7eb;
+            border: 1px solid #4b5563;
+        }
+    </style>
+</head>
+<body class="light">
+
+    <div class="container flex flex-col items-center">
+        <!-- Header -->
+        <header class="header w-full">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🌱</span>
+                <span class="text-xl font-bold">Crop<span class="text-green-700">Verse</span></span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link relative pb-1 transition-all duration-300 active" onclick="showPage('home')">Home</a>
+                <a href="#ai-assistant" class="nav-link relative pb-1 transition-all duration-300" onclick="showPage('ai-assistant')">CROP AI</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button id="dark-mode-toggle" class="bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 px-4 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="language-switcher" class="flag-button">
+                    <span id="flag-emoji">🇮🇳</span>
+                    <span id="lang-code" class="ml-2">EN</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Home Page Content (English) -->
+        <div id="home-en" class="page-content active w-full pt-12">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8">
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <div class="rounded-full bg-green-200 text-green-700 px-4 py-1 text-sm font-medium inline-block mb-4">
+                        Powered by AI for Farmers
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+                        AI-based crop recommendation for<br><span class="text-green-600">farmers in India</span>
+                    </h1>
+                    <p class="text-lg mb-8">
+                        Our platform provides personalized crop recommendations based on soil, climate, and market data, helping you increase your yield and income.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button onclick="showPage('ai-assistant')" class="bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg">
+                            Get Started
+                        </button>
+                        <button class="border border-green-600 text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition-colors duration-300">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center relative">
+                    <img src="assets/ai-farming.png" alt="AI Farming Illustration" class="w-full h-auto rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/600x400/16a34a/ffffff?text=AI+Farming+Illustration';">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Home Page Content (Hindi) -->
+        <div id="home-hi" class="page-content w-full pt-12">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8">
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <div class="rounded-full bg-green-200 text-green-700 px-4 py-1 text-sm font-medium inline-block mb-4">
+                        किसानों के लिए AI द्वारा संचालित
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+                        भारत में किसानों के लिए<br><span class="text-green-600">AI-आधारित फसल की सिफारिश</span>
+                    </h1>
+                    <p class="text-lg mb-8">
+                        हमारा मंच मिट्टी, जलवायु और बाजार डेटा के आधार पर व्यक्तिगत फसल की सिफारिशें प्रदान करता है, जिससे आपको अपनी उपज और आय बढ़ाने में मदद मिलती है।
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button onclick="showPage('ai-assistant')" class="bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg">
+                            शुरू करें
+                        </button>
+                        <button class="border border-green-600 text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition-colors duration-300">
+                            और जानें
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center relative">
+                    <img src="assets/ai-farming.png" alt="AI Farming Illustration" class="w-full h-auto rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/600x400/16a34a/ffffff?text=AI+Farming+Illustration';">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Home Page Content (Punjabi) -->
+        <div id="home-pa" class="page-content w-full pt-12">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8">
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <div class="rounded-full bg-green-200 text-green-700 px-4 py-1 text-sm font-medium inline-block mb-4">
+                        ਕਿਸਾਨਾਂ ਲਈ AI ਦੁਆਰਾ ਸੰਚਾਲਿਤ
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+                        ਭਾਰਤ ਦੇ ਕਿਸਾਨਾਂ ਲਈ<br><span class="text-green-600">ਏਆਈ-ਆਧਾਰਿਤ ਫਸਲ ਸਿਫਾਰਸ਼</span>
+                    </h1>
+                    <p class="text-lg mb-8">
+                        ਸਾਡਾ ਪਲੇਟਫਾਰਮ ਮਿੱਟੀ, ਜਲਵਾਯੂ ਅਤੇ ਬਾਜ਼ਾਰ ਦੇ ਅੰਕੜਿਆਂ ਦੇ ਆਧਾਰ ਤੇ ਵਿਅਕਤੀਗਤ ਫਸਲ ਸਿਫਾਰਸ਼ਾਂ ਪ੍ਰਦਾਨ ਕਰਦਾ ਹੈ, ਜਿਸ ਨਾਲ ਤੁਹਾਡੀ ਉਪਜ ਅਤੇ ਆਮਦਨ ਵਧਾਉਣ ਵਿੱਚ ਮਦਦ ਮਿਲਦੀ ਹੈ।
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button onclick="showPage('ai-assistant')" class="bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg">
+                            ਸ਼ੁਰੂ ਕਰੋ
+                        </button>
+                        <button class="border border-green-600 text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition-colors duration-300">
+                            ਹੋਰ ਜਾਣੋ
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center relative">
+                    <img src="assets/ai-farming.png" alt="AI Farming Illustration" class="w-full h-auto rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/600x400/16a34a/ffffff?text=AI+Farming+Illustration';">
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page Content (Marathi) -->
+        <div id="home-mr" class="page-content w-full pt-12">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8">
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <div class="rounded-full bg-green-200 text-green-700 px-4 py-1 text-sm font-medium inline-block mb-4">
+                        शेतकऱ्यांसाठी AI द्वारे संचालित
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+                        भारतातील शेतकऱ्यांसाठी<br><span class="text-green-600">AI-आधारित पीक शिफारस</span>
+                    </h1>
+                    <p class="text-lg mb-8">
+                        आमचे प्लॅटफॉर्म माती, हवामान आणि बाजारपेठेच्या आकडेवारीनुसार वैयक्तिक पीक शिफारसी प्रदान करते, ज्यामुळे तुम्हाला तुमचे उत्पन्न आणि उत्पन्न वाढविण्यात मदत होते.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button onclick="showPage('ai-assistant')" class="bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-700 transition-colors duration-300 shadow-lg">
+                            सुरुवात करा
+                        </button>
+                        <button class="border border-green-600 text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition-colors duration-300">
+                            अधिक जाणून घ्या
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center relative">
+                    <img src="assets/ai-farming.png" alt="AI Farming Illustration" class="w-full h-auto rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/600x400/16a34a/ffffff?text=AI+Farming+Illustration';">
+                </div>
+            </div>
+        </div>
+
+        <!-- LLM Agent Page Content -->
+        <div id="ai-assistant" class="page-content w-full pt-12 flex justify-center">
+            <div class="phone-container w-full max-w-sm md:max-w-3xl h-[700px] md:h-[800px] shadow-2xl">
+                <div class="phone-screen ai-assistant-page flex-1">
+                    <!-- Chat Header -->
+                    <div class="chat-header">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-green-400 text-lg font-bold">Crop AI</span>
+                        </div>
+                        <div class="relative">
+                            <button id="config-button" class="text-2xl">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            <div id="config-menu" class="config-menu">
+                                <h3 class="font-bold mb-2">Settings</h3>
+                                <div class="mb-4">
+                                    <label for="api-key-input" class="block text-sm font-medium mb-1">Your LLM Agent API Key</label>
+                                    <input type="text" id="api-key-input" placeholder="Enter API Key" class="w-full py-2 px-3 rounded-md text-sm">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="voice-select" class="block text-sm font-medium">Voice Output</label>
+                                    <select id="voice-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
+                                        <option value="Zephyr">Zephyr (Bright)</option>
+                                        <option value="Puck">Puck (Upbeat)</option>
+                                        <option value="Kore">Kore (Firm)</option>
+                                        <option value="Enceladus">Enceladus (Breathy)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="language-select-config" class="block text-sm font-medium">Language</label>
+                                    <select id="language-select-config" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
+                                        <option value="en-US">English</option>
+                                        <option value="hi-IN">Hindi</option>
+                                        <option value="pa-IN">Punjabi</option>
+                                        <option value="mr-IN">Marathi</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Body -->
+                    <div id="chat-body" class="flex-1 p-4 overflow-y-auto space-y-4">
+                        <!-- Initial AI Message -->
+                        <div class="flex justify-start">
+                            <div class="chat-bubble-ai" data-lang-en="Namaste! How can I help you with your crops today?" data-lang-hi="नमस्ते किसान! मैं आपकी फसलों के बारे में कैसे मदद कर सकता हूँ?" data-lang-pa="ਨਮਸਤੇ! ਮੈਂ ਅੱਜ ਤੁਹਾਡੀਆਂ ਫਸਲਾਂ ਬਾਰੇ ਕਿਵੇਂ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ?" data-lang-mr="नमस्ते! मी आज तुमच्या पिकांबद्दल कशी मदत करू शकेन?">
+                                Namaste! How can I help you with your crops today?
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="chat-input-container">
+                        <button id="mic-button" class="text-2xl mr-4 hover:text-green-500 transition-colors duration-200">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button id="play-pause-button" class="text-2xl mr-4 hover:text-green-500 transition-colors duration-200">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <button id="send-button" class="bg-green-600 text-white rounded-full p-3 ml-2 hover:bg-green-700 transition-colors duration-200">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        const chatBody = document.getElementById('chat-body');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const playPauseButton = document.getElementById('play-pause-button');
+        const chatInput = document.getElementById('chat-input');
+        const languageSelectConfig = document.getElementById('language-select-config');
+        const voiceSelectConfig = document.getElementById('voice-select');
+        const languageSwitcher = document.getElementById('language-switcher');
+        const flagEmoji = document.getElementById('flag-emoji');
+        const langCode = document.getElementById('lang-code');
+        const apiKeyInput = document.getElementById('api-key-input');
+        
+        let audioInstance = new Audio();
+        let currentAudioUrl = null;
+        const languages = ['en', 'hi', 'pa', 'mr'];
+        const languageMap = {
+            'en': { flag: '🇮🇳', code: 'EN', homeId: 'home-en' },
+            'hi': { flag: '🇮🇳', code: 'HI', homeId: 'home-hi' },
+            'pa': { flag: '🇮🇳', code: 'PA', homeId: 'home-pa' },
+            'mr': { flag: '🇮🇳', code: 'MR', homeId: 'home-mr' }
+        };
+        let currentLangIndex = 0;
+        
+        // This function is crucial for the navigation links to work.
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            if (pageId === 'home') {
+                const currentLang = languages[currentLangIndex];
+                const homeId = languageMap[currentLang].homeId;
+                document.getElementById(homeId).classList.add('active');
+            } else {
+                document.getElementById(pageId).classList.add('active');
+            }
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelector(`.nav-link[href="#${pageId}"]`).classList.add('active');
+        }
+
+        function setLanguage(lang) {
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            document.getElementById(languageMap[lang].homeId).classList.add('active');
+            
+            flagEmoji.textContent = languageMap[lang].flag;
+            langCode.textContent = languageMap[lang].code;
+
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelector(`.nav-link[href="#home"]`).classList.add('active');
+
+            const initialGreeting = document.querySelector('.chat-bubble-ai');
+            if (initialGreeting) {
+                const greetingText = initialGreeting.dataset[`lang-${lang}`.toLowerCase()];
+                initialGreeting.textContent = greetingText;
+            }
+            
+            languageSelectConfig.value = `${lang}-IN`;
+        }
+
+        languageSwitcher.addEventListener('click', () => {
+            currentLangIndex = (currentLangIndex + 1) % languages.length;
+            const newLang = languages[currentLangIndex];
+            setLanguage(newLang);
+        });
+
+        // Dark/Light mode implementation
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark');
+            document.body.classList.remove('light');
+        } else {
+            document.body.classList.add('light');
+            document.body.classList.remove('dark');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        });
+
+        languageSelectConfig.addEventListener('change', (event) => {
+            const lang = event.target.value.substring(0, 2).toLowerCase();
+            setLanguage(lang);
+        });
+
+        document.getElementById('config-button').addEventListener('click', function(event) {
+            event.stopPropagation();
+            document.getElementById('config-menu').classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(event) {
+            const configMenu = document.getElementById('config-menu');
+            const configButton = document.getElementById('config-button');
+            if (!configMenu.contains(event.target) && !configButton.contains(event.target)) {
+                configMenu.classList.remove('active');
+            }
+        });
+
+        // LLM Agent and TTS functions
+        function pcmToWav(pcmData, sampleRate) {
+            const numChannels = 1;
+            const bytesPerSample = 2;
+            const bitDepth = 16;
+            const dataLength = pcmData.length * bytesPerSample;
+            const buffer = new ArrayBuffer(44 + dataLength);
+            const view = new DataView(buffer);
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + dataLength, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * numChannels * bytesPerSample, true);
+            view.setUint16(32, numChannels * bytesPerSample, true);
+            view.setUint16(34, bitDepth, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataLength, true);
+            for (let i = 0; i < pcmData.length; i++) {
+                view.setInt16(44 + i * bytesPerSample, pcmData[i], true);
+            }
+            return new Blob([view], { type: 'audio/wav' });
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        async function playAudioFromApi(text, voice, language) {
+            if (audioInstance) {
+                audioInstance.pause();
+            }
+            playPauseButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            const payload = {
+                contents: [{
+                    parts: [{ text: text }]
+                }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: voice }
+                        },
+                        languageCode: language,
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+
+                if (audioData && mimeType && mimeType.startsWith("audio/L16")) {
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000;
+                    const pcmData = Uint8Array.from(atob(audioData), c => c.charCodeAt(0));
+                    const pcm16 = new Int16Array(pcmData.buffer);
+
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    currentAudioUrl = URL.createObjectURL(wavBlob);
+                    audioInstance.src = currentAudioUrl;
+
+                    audioInstance.onended = () => {
+                        playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+                    };
+                    await audioInstance.play();
+                    playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    console.error("Invalid audio data from API:", result);
+                    playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            } catch (error) {
+                console.error('Error generating or playing audio:', error);
+                playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        }
+        
+        playPauseButton.addEventListener('click', () => {
+            if (audioInstance.paused) {
+                if (currentAudioUrl) {
+                    audioInstance.play();
+                    playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+                }
+            } else {
+                audioInstance.pause();
+                playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+        
+        async function getLlmResponse(userMessage) {
+            // IMPORTANT: You must replace this placeholder URL with your actual API endpoint.
+            const llmAgentUrl = 'https://kanha0311.github.io/TDS_BonusP2_LLM_Agent/'; 
+            const apiKey = apiKeyInput.value.trim();
+
+            if (!apiKey) {
+                return "Please enter your LLM Agent API Key in the settings menu.";
+            }
+
+            // IMPORTANT: You must adjust this payload to match the exact requirements of your LLM agent's API.
+            // The key for the prompt might be different (e.g., 'query' or 'input').
+            const payload = {
+                prompt: userMessage,
+                api_key: apiKey,
+                settings: {
+                    // Add more settings here that your agent requires.
+                    // For example:
+                    // system_instruction: "You are a helpful assistant for farmers in India.",
+                }
+            };
+
+            try {
+                const response = await fetch(llmAgentUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Some APIs might require the API key in a header. If so, use this format:
+                        // 'Authorization': `Bearer ${apiKey}`,
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                // This line must be adjusted to correctly extract the response text from the
+                // JSON object returned by your agent. For example, if the response is
+                // { "response": "This is the AI's answer" }, you would use result.response.
+                return result.text || result.response || "I am sorry, but I was unable to get a response from your AI agent. Please check its status and API documentation.";
+
+            } catch (error) {
+                console.error('Error calling your LLM agent:', error);
+                return "I am sorry, but I was unable to connect to your LLM agent. Please ensure the URL and API key are correct.";
+            }
+        }
+
+        document.getElementById('mic-button').addEventListener('click', function() {
+            const userBubble = document.createElement('div');
+            userBubble.className = 'flex justify-end';
+            userBubble.innerHTML = '<div class="chat-bubble-user animate-pulse">Listening...</div>';
+            chatBody.appendChild(userBubble);
+            chatBody.scrollTop = chatBody.scrollHeight;
+            
+            setTimeout(async () => {
+                const simulatedUserText = "What is the best fertilizer for wheat?";
+                userBubble.innerHTML = `<div class="chat-bubble-user">${simulatedUserText}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+                
+                const llmResponse = await getLlmResponse(simulatedUserText);
+                
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'flex justify-start';
+                aiBubble.innerHTML = `<div class="chat-bubble-ai">${llmResponse}</div>`;
+                chatBody.appendChild(aiBubble);
+                chatBody.scrollTop = chatBody.scrollHeight;
+                
+                playAudioFromApi(llmResponse, voiceSelectConfig.value, languageSelectConfig.value);
+            }, 3000);
+        });
+
+        document.getElementById('send-button').addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+
+            const userBubble = document.createElement('div');
+            userBubble.className = 'flex justify-end';
+            userBubble.innerHTML = `<div class="chat-bubble-user">${message}</div>`;
+            chatBody.appendChild(userBubble);
+            chatInput.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            const llmResponse = await getLlmResponse(message);
+            
+            const aiBubble = document.createElement('div');
+            aiBubble.className = 'flex justify-start';
+            aiBubble.innerHTML = `<div class="chat-bubble-ai">${llmResponse}</div>`;
+            chatBody.appendChild(aiBubble);
+            chatBody.scrollTop = chatBody.scrollHeight;
+            
+            playAudioFromApi(llmResponse, voiceSelectConfig.value, languageSelectConfig.value);
+        }
+    </script>
+</body>
 </html>
